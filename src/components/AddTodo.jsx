@@ -9,7 +9,7 @@ function AddTodo() {
   const addTodoHandler = (e) => {
     e.preventDefault();
     if (input.trim()) {
-      dispatch(addTodo({ input })); // Make sure text is passed correctly
+      dispatch(addTodo({ input })); 
       setInput('');
     }
   };
