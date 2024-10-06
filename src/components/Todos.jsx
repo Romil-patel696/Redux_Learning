@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeTodo, updateTodos } from '../features/todo/todoSlice'; // Import necessary actions
+import { removeTodo, updateTodos } from '../features/todo/todoSlice';
 
 const TodoApp = () => {
   const todos = useSelector((state) => state.todos); // Access todos from the Redux state
@@ -9,58 +9,66 @@ const TodoApp = () => {
   const [updateText, setUpdateText] = useState(''); // Track updated text
 
   const handleUpdateTodo = (id) => {
-    dispatch(updateTodos({ id, text: updateText })); // Dispatch action to update todo
-    setEditId(null); // Exit edit mode after updating
-    setUpdateText(''); // Clear the input field after update
+    if (updateText.trim()) {
+      dispatch(updateTodos({ id, text: updateText }));
+      setEditId(null);
+      setUpdateText(''); // Clear the input field after update
+    }
+  };
+
+  const handleEditClick = (todo) => {
+    setEditId(todo.id); // Set the id for editing
+    setUpdateText(todo.text); // Pre-fill the input with the current todo text
   };
 
   return (
-    <>
-      <div>Todos</div>
-      <ul className="list-none">
+    <div className="max-w-lg mx-auto mt-8 bg-gray-900 p-6 rounded-lg shadow-md">
+      <h3 className="text-white text-2xl font-semibold mb-4">Your Todos</h3>
+      <ul className="list-none space-y-4">
         {todos.map((todo) => (
           <li
-            className="mt-4 flex justify-between items-center bg-zinc-800 px-4 py-2 rounded"
+            className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md"
             key={todo.id}
           >
             {editId === todo.id ? (
               <input
-                className="text-white bg-gray-700 px-2 py-1 rounded"
+                className="text-white bg-gray-700 px-3 py-2 rounded-lg w-full mr-4"
                 value={updateText}
                 onChange={(e) => setUpdateText(e.target.value)}
                 placeholder="Update todo"
               />
             ) : (
-              <div className="text-white">{todo.text}</div>
+              <div className="text-white flex-grow text-lg font-medium tracking-wide mr-6">
+                {todo.text}
+              </div> // Styled todo text display
             )}
-            <button
-              onClick={() => dispatch(removeTodo(todo.id))}
-              className="text-white bg-red-500 border-0 py-1 px-4 focus:outline-none hover:bg-red-600 rounded text-md"
-            >
-              Delete
-            </button>
-            {editId === todo.id ? (
+            <div className="flex space-x-2">
               <button
-                onClick={() => handleUpdateTodo(todo.id)}
-                className="text-white bg-green-500 border-0 py-1 px-4 focus:outline-none hover:bg-green-600 rounded text-md ml-2"
+                onClick={() => dispatch(removeTodo(todo.id))}
+                className="text-white bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600 transition-all"
               >
-                Save
+                Delete
               </button>
-            ) : (
-              <button
-                onClick={() => {
-                  setEditId(todo.id); // Set the id for editing
-                  setUpdateText(todo.text); // Pre-fill the input with the current text
-                }}
-                className="text-white bg-blue-500 border-0 py-1 px-4 focus:outline-none hover:bg-blue-600 rounded text-md ml-2"
-              >
-                Edit
-              </button>
-            )}
+              {editId === todo.id ? (
+                <button
+                  onClick={() => handleUpdateTodo(todo.id)}
+                  className="text-white bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600 transition-all"
+                >
+                  Save
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleEditClick(todo)}
+                  className="text-white bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600 transition-all"
+                >
+                  Edit
+                </button>
+              )}
+            </div>
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 };
 
