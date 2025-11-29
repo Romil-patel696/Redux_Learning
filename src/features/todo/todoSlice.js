@@ -5,14 +5,12 @@ import { createSlice, nanoid } from "@reduxjs/toolkit";
 const initialState={
     todos : []
 }
-
 // slice is big version of reducer
-
 export const todoSlice=createSlice({
     name: 'todo',
     initialState,//create at up side ==> refer there.
 
-    // in reducers property adn function
+    // reducer contain  property and function
     reducers:{
         addTodo: (state, action)=>{
             const todo={
@@ -36,7 +34,5 @@ export const todoSlice=createSlice({
 //  sayntax to export reducers individual functionalities
 
 export const {addTodo, removeTodo,  updateTodos}= todoSlice.actions
-
 // OUR 'STORE' IS A  RESCTRICTIVE STORE MEANS IT WILL  UPDATE VALUE ONLY IF UPDATE CALL COMES FROM THE REGISTERED OR GIVEN REDUCERS =>> GIVE LIST OF ALL REDUCERS
-
 export default todoSlice.reducer
